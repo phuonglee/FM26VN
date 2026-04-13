@@ -36,7 +36,8 @@ class LogicCheck:
         temp_vi = vi_lower
         exemptions = [
             "tiếng anh", "vương quốc anh", "nước anh", "anh quốc", "v.q anh",
-            "trẻ em", "anh em", "chị em", "em gái", "em trai", "bạn bè", "em bé"
+            "trẻ em", "anh em", "chị em", "em gái", "em trai", "bạn bè", "em bé",
+            "mày mò", "đội tuyển anh", "đội tuyển vương quốc anh", "anh-scotland"
         ]
         for ex in exemptions:
             temp_vi = temp_vi.replace(ex, " EXEMPTED_WORD ")
@@ -53,6 +54,11 @@ class LogicCheck:
             match = re.search(pattern, temp_vi)
             if match:
                 word = match.group(1)
+                
+                # Ngoại lệ cho "anh" khi là tên quốc gia dựa trên context tiếng Anh
+                if word == 'anh' and any(c in eng_lower for c in ['england', 'britain', 'uk', 'english', 'british']):
+                    continue
+                
                 # ĐẶC BIỆT: Nếu là từ 'bạn', kiểm tra xem gốc có 'friend' hoặc 'your' không
                 if word == 'bạn' and ('friend' in eng_lower or 'your' in eng_lower):
                     continue 
