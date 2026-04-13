@@ -23,12 +23,22 @@ Hỏi người dùng:
 
 ### 3. Thực thi // turbo
 Chạy script tương ứng:
-- Nếu Free Tier: `python 2_run_agents_free_tier.py`
-- Nếu Pro: `python 2_run_agents.py`
+- Nếu Free Tier: `python 2_run_agents.py --model free_tier`
+- Nếu Pro: `python 2_run_agents.py --model pro_tier`
+- **Lưu ý:** Trên Windows, nên dùng `$env:PYTHONUTF8=1;` trước lệnh để tránh lỗi font.
 
 ### 4. Giám sát
-- Theo dõi log đầu ra.
-- Nếu gặp lỗi Rate Limit, đề xuất tạm dừng hoặc đổi Model.
+- Theo dõi log đầu ra qua `command_status`.
+- Nếu gặp lỗi Crash hoặc Quota Limit, hãy dừng lại và ghi log vào `.agent/logs/error-today.txt`.
+- Cập nhật tiến độ định kỳ cho người dùng.
+
+### 5. Tạm dừng & Dọn dẹp // turbo
+Khi người dùng yêu cầu dừng hoặc tiến trình bị crash:
+- Dừng process đang chạy.
+- Chạy script reset để trả lại các bản ghi đang dở dang về hàng đợi:
+  ```powershell
+  python scripts/maintenance/reset_status.py
+  ```
 
 ## Principles
 - Đảm bảo tuân thủ `rules.md` (Persona "Ngài", tag hệ thống).
