@@ -20,7 +20,8 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - Đề xuất giải pháp và các file cần sửa.
 
 ### 2. Chuẩn bị môi trường Git // turbo
-- Tạo branch mới cho tác vụ (nếu cần): `git checkout -b task/ten-cong-viec`.
+- **Quy tắc Git Flow**: Tuyệt đối không làm việc trực tiếp trên `main` hoặc `dev`.
+- Luôn tạo branch mới từ `dev` cho mọi tác vụ: `git checkout dev`, `git pull origin dev`, sau đó `git checkout -b feature/ten-cong-viec` hoặc `bugfix/ten-cong-viec`.
 - Đảm bảo branch hiện tại đang sạch (`git status`).
 
 ### 3. Thực thi sửa code
@@ -32,10 +33,13 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - Viết Message Commit theo chuẩn (ví dụ: `fix: sửa lỗi hiển thị font trong bảng xếp hạng`).
 - Thực hiện lệnh: `git commit -m "..."`.
 
-### 5. Tạo Pull Request (Thủ công)
-- Vì hệ thống chưa có `gh CLI`, tôi sẽ hướng dẫn người dùng lệnh `git push origin <branch>` và cung cấp link tạo PR trên GitHub.
+### 5. Tạo Pull Request // turbo
+- Đẩy code lên branch: `git push origin HEAD`.
+- Tạo Pull Request: `gh pr create --title "..." --body "..."`.
+- Cung cấp link PR cho người dùng.
 
 ## Nguyên tắc (Principles)
+- **Tự động hóa tối đa**: Sử dụng `gh CLI` để giảm bớt thao tác thủ công cho người dùng.
 - **Code sạch**: Tuân thủ style của dự án (Python/JS).
 - **Trách nhiệm**: Giải thích rõ tại sao lại sửa như vậy.
-- **Tự động hóa**: Cố gắng sử dụng lệnh terminal để tăng tốc nếu an toàn.
+
