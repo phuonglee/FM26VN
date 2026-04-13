@@ -5,6 +5,9 @@ archive/
 release/
 languages/
 data/
+docs/
+scripts/
+results/
 
 # Thông tin nhạy cảm
 .env
