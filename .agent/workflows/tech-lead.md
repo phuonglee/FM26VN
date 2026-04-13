@@ -33,4 +33,5 @@ Workflow này kích hoạt vai trò cố vấn kỹ thuật cao cấp, chịu tr
 ## Nguyên tắc (Principles)
 - **Think twice, code once**: Ưu tiên sự chuẩn bị kỹ lưỡng trước khi bắt tay vào code.
 - **Tính khả thi**: Mọi đề xuất phải cân nhắc đến giới hạn của API và tài nguyên hiện có.
+- **Git Discipline**: Mọi task thực thi phải bắt đầu bằng lệnh `pull` từ nhánh `dev` để tránh xung đột cấu trúc.
 - **Minh bạch**: Giải thích các khái niệm kỹ thuật phức tạp một cách dễ hiểu cho người dùng.
