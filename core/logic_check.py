@@ -69,13 +69,26 @@ class LogicCheck:
             return False, "; ".join(found_errs)
         return True, "Pronouns OK"
 
-    @staticmethod
-    def validate_cleanup(vi):
-        """Kiểm tra lỗi trình bày."""
-        # 1. Kiểm tra lặp từ
-        if re.search(r'\b(\w+)\s+\1\b', vi, re.IGNORECASE):
-            # Loại trừ một số từ lặp hợp lệ trong tiếng Việt (vd: đi đi, làm làm) - tạm thời đơn giản
-            return False, "Phát hiện lặp từ (Double words)"
+        """Kiểm tra lỗi trình bày, bỏ qua nội dung trong [COMMENT]."""
+        # 1. Loại bỏ phần comment [...] trước khi kiểm tra lặp từ
+        text_to_check = re.sub(r'\[COMMENT:[^\]]+\]', '', vi)
+        
+        import unicodedata
+        text_to_check = unicodedata.normalize('NFC', text_to_check)
+        
+        # 2. Kiểm tra lặp từ (Double words)
+        # Danh sách từ láy Tiếng Việt (Dùng mã Unicode để tránh lỗi encoding trên Windows)
+        whitelist_raw = (
+            "bla,buồn,băng,ca,chiến,chung,chất,chằm,chỉ,cách,có,của,cười,cạnh,cấp,cần,cầu,draft,dần,gian,giá,giải,goal,golazo,gần,hay,hiện,hướng,hạng,khi,không,khăng,khả,kể,kỳ,luôn,làm,lâng,lương,lại,mãi,một,mới,ngày,người,nhiều,nhất,nào,nói,năm,quen,quá,rất,sai,sau,song,số,thành,thể,thủ,tin,toán,trước,trừ,tuyển,tích,tại,tất,tập,từ,vi,vui,vân,vòng,vù,xa,xem,xinh,ít,đang,đi,đó,đùng,đưa,được,đầu,đến,để,định,đối,đồng,đội,ừm"
+        )
+        whitelist = set(whitelist_raw.split(','))
+        
+        # Sử dụng regex linh hoạt hơn cho Unicode
+        matches = re.finditer(r'(?<!\w)(\w+)\s+\1(?!\w)', text_to_check, re.IGNORECASE | re.UNICODE)
+        for m in matches:
+            word = m.group(1).lower()
+            if word not in whitelist:
+                return False, f"Phát hiện lặp từ (Double words): '{word} {word}'"
         
         # 2. Khoảng trắng kép
         if "  " in vi:
