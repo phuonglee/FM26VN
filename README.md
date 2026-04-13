@@ -33,9 +33,17 @@ python 2_run_agents.py --model gpt_mini
 
 Các model hỗ trợ: `default`, `deepseek`, `free_tier`, `gpt_mini`, `local`, `moonshot`.
 
-### 2. Các lệnh hữu ích khác
+### 2. Hệ thống Tri thức (Source of Truth - SOT)
+Để đảm bảo AI dịch đồng nhất và dùng đúng xưng hô xị xò, cần nạp tri thức vào SOT trước khi chạy:
+- **Build Index**: `python scripts/database/build_sot_index.py` (Nạp quy tắc từ `rules.md` và các bản dịch 1.0 vào bộ nhớ vector).
+
+### 3. Kiểm soát Chất lượng (Quality Control)
+Sử dụng "The Lean Judge" để chấm điểm tự động và cách ly lỗi:
+- **Chấm điểm hàng loạt**: `python runners/run_reviewer.py` (Tự động gán `rate` và `status 3` cho các câu sai thẻ game hoặc sai xưng hô).
+
+### 4. Các lệnh hữu ích khác
 - **Chẩn đoán tiến độ**: `python scripts/diagnostics/check_progress.py`
-- **Chỉnh sửa tags**: `python scripts/fixes/fix_tags.py`
+- **Tự động sửa xưng hô**: `python scripts/fixes/auto_fix_pronouns.py`
 - **Xuất file LTF**: `python core/3_export_to_ltf.py`
 
 ## ⚙️ Cấu hình (Configuration)
