@@ -1,0 +1,6 @@
+[2026-04-13 23:09] CRASH DETECTED
+Error: GEMINI_API_KEY_FREE chưa được cấu hình hoặc đang bị comment trong file .env.
+Chi tiết:
+[*] Bắt đầu chạy agent với tùy chọn model: free_tier
+Dừng: Chưa cấu hình GEMINI_API_KEY_FREE trong file .env
+[!] Tác vụ agents thất bại với mã lỗi: 1

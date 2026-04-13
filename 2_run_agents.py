@@ -14,6 +14,11 @@ def main():
         choices=["default", "deepseek", "free_tier", "gpt_mini", "local", "moonshot"],
         help="Chọn mô hình agent runner để chạy."
     )
+    parser.add_argument(
+        "--use-sot",
+        action="store_true",
+        help="Sử dụng SOT Engine để bổ sung tri thức và hướng dẫn vào Prompt."
+    )
     
     args = parser.parse_args()
     
@@ -23,6 +28,11 @@ def main():
         module_name = f"runners.run_{args.model}"
     else:
         module_name = "runners.run_default"
+
+    if args.use_sot:
+        import os
+        os.environ["USE_SOT"] = "1"
+        print("[*] Đang kích hoạt SOT Engine để chuẩn bị tri thức...")
 
     print(f"[*] Bắt đầu chạy agent với tùy chọn model: {args.model}")
     try:
