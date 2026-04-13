@@ -17,16 +17,17 @@ def main():
     
     args = parser.parse_args()
     
-    runner_script = f"run_{args.model}.py"
-    runner_path = PROJECT_ROOT / "runners" / runner_script
-    
-    if not runner_path.exists():
-        print(f"Lỗi: Không tìm thấy file {runner_path}.")
-        sys.exit(1)
-        
+    # Chuyển đổi tên script sang module path (VD: run_deepseek.py -> runners.run_deepseek)
+    module_name = f"runners.{args.model if args.model != 'default' else 'run_default'}"
+    if args.model != 'default':
+        module_name = f"runners.run_{args.model}"
+    else:
+        module_name = "runners.run_default"
+
     print(f"[*] Bắt đầu chạy agent với tùy chọn model: {args.model}")
     try:
-        subprocess.run([sys.executable, str(runner_path)], check=True)
+        # Chạy dưới dạng module để Python tự xử lý sys.path từ thư mục gốc
+        subprocess.run([sys.executable, "-m", module_name], check=True)
     except subprocess.CalledProcessError as e:
         print(f"\n[!] Tác vụ agents thất bại với mã lỗi: {e.returncode}")
         sys.exit(e.returncode)

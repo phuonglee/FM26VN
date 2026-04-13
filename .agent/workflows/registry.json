@@ -13,5 +13,10 @@
     "category": "development",
     "description": "Developer Agent - Tự động sửa lỗi và quản lý code (commit/PR)",
     "tags": ["dev", "git", "bug-fix"]
+  },
+  "tech-lead": {
+    "category": "consulting",
+    "description": "Technical Leader - Phân tích kiến trúc, review code và đề xuất thiết kế",
+    "tags": ["architecture", "review", "design", "brainstorming"]
   }
 }
