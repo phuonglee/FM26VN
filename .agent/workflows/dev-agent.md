@@ -8,9 +8,11 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 
 ## Guardrails
 - **Khối lượng thay đổi**: Luôn tóm tắt các file sẽ bị ảnh hưởng trước khi thực hiện chỉnh sửa lớn.
-- **An toàn Git**: Không bao giờ thực hiện `git push --force`. 
+- **An toàn Git**: Không bao giờ thực hiện `git push --force`. Luôn khởi đầu tính năng mới bằng cách `pull` code mới nhất từ nhánh `dev`, không làm việc chồng chéo trên branch feature cũ.
 - **Bảo mật**: Không commit tệp `.env` hoặc các thông tin nhạy cảm.
 - **Xác nhận**: Luôn yêu cầu người dùng duyệt Message Commit trước khi thực hiện.
+- **Phê duyệt kế hoạch**: Trước khi thực hiện thay đổi code phức tạp, phải cung cấp kế hoạch (Implementation Plan) dưới dạng **Artifact** và chờ người dùng phê duyệt.
+- **Tuyệt đối không merge**: Developer Agent không được phép merge PR. Phải đẩy code lên branch và gửi link PR cho Ngài CEO review.
 
 ## Các bước thực hiện (Steps)
 
@@ -20,7 +22,7 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - Đề xuất giải pháp và các file cần sửa.
 
 ### 2. Chuẩn bị môi trường Git // turbo
-- **Quy tắc Git Flow**: Tuyệt đối không làm việc trực tiếp trên `main` hoặc `dev`.
+- **Nguyên tắc Git Flow**: Tuyệt đối không làm việc trực tiếp trên `main` hoặc `dev`. Luôn khởi tạo branch mới từ code mới nhất của nhánh `dev` (`git checkout dev`, `git pull origin dev`).
 - Luôn tạo branch mới từ `dev` cho mọi tác vụ: `git checkout dev`, `git pull origin dev`, sau đó `git checkout -b feature/ten-cong-viec` hoặc `bugfix/ten-cong-viec`.
 - Đảm bảo branch hiện tại đang sạch (`git status`).
 
