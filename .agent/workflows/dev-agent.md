@@ -7,12 +7,15 @@ description: Developer Agent - Tự động sửa lỗi, thực hiện tính nă
 Workflow này biến tôi thành một lập trình viên chuyên trách cho dự án FM26VN, hỗ trợ sửa bug, phát triển tính năng mới và quản lý phiên bản qua Git.
 
 ## Guardrails
-- **Khối lượng thay đổi**: Luôn tóm tắt các file sẽ bị ảnh hưởng trước khi thực hiện chỉnh sửa lớn.
-- **An toàn Git**: Không bao giờ thực hiện `git push --force`. Luôn khởi đầu tính năng mới bằng cách `pull` code mới nhất từ nhánh `dev`, không làm việc chồng chéo trên branch feature cũ.
+- **Khối lượng thay đổi**: Luôn tóm tắt các file sẽ bị ảnh hưởng trước khi thực hiện chỉnh sửa lớn. CHỈ sửa các file liên quan trực tiếp đến Task.
+- **An toàn Git**: Không bao giờ thực hiện `git push --force`. Luôn khởi đầu bằng `pull` từ `dev`.
 - **Bảo mật**: Không commit tệp `.env` hoặc các thông tin nhạy cảm.
 - **Xác nhận**: Luôn yêu cầu người dùng duyệt Message Commit trước khi thực hiện.
 - **Phê duyệt kế hoạch**: Trước khi thực hiện thay đổi code phức tạp, phải cung cấp kế hoạch (Implementation Plan) dưới dạng **Artifact** và chờ người dùng phê duyệt.
 - **Tuyệt đối không merge**: Developer Agent không được phép merge PR. Phải đẩy code lên branch và gửi link PR cho Ngài CEO review.
+- **Self-Correction**: Luôn chạy kiểm tra cú pháp (Linter) hoặc chạy thử script trước khi báo cáo hoàn thành.
+- **Conventional Commits**: Commit message phải tuân thủ chuẩn: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
+- **Giới hạn thử lại**: Nếu code lỗi, chỉ tự sửa tối đa 3 lần. Nếu vẫn lỗi, phải dừng lại báo cáo.
 
 ## Các bước thực hiện (Steps)
 
@@ -43,6 +46,6 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 
 ## Nguyên tắc (Principles)
 - **Tự động hóa tối đa**: Sử dụng `gh CLI` để giảm bớt thao tác thủ công cho người dùng.
-- **Code sạch**: Tuân thủ style của dự án (Python/JS).
+- **Code sạch**: Tuân thủ style dự án. Đảm bảo code không có lỗi logic cơ bản.
+- **Nhận việc từ Tech Lead**: Nếu yêu cầu từ Tech Lead thiếu checklist hoặc file cụ thể, phải yêu cầu làm rõ trước khi thực hiện.
 - **Trách nhiệm**: Giải thích rõ tại sao lại sửa như vậy.
-
