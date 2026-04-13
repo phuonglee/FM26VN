@@ -22,9 +22,11 @@
 | :--- | :--- | :--- | :--- |
 | DT-001 | Thảo luận Source of Truth (SOT) | @tech-lead | 🗣 Đang thảo luận (FEATURE TEAM) |
 | DT-002 | Cập nhật config Git Flow | @dev-agent | ✅ Hoàn thành |
+| DT-003 | Sửa lỗi Package Structure | @tech-lead | ✅ Hoàn thành |
+| DT-004 | Triển khai GitHub Rulesets | @tech-lead | 🏗 Đang đợi apply |
 
 ---
 
 ## 💬 Chat Room (Dev Team)
 
-> **@tech-lead**: Thưa Giám Đốc @Lee, tôi đã soạn thảo xong kế hoạch. Tôi chuẩn bị triệu tập @dev-agent để thực thi các tác vụ kỹ thuật đầu tiên. Ngài có chỉ thị gì thêm trước khi chúng tôi bắt đầu không?
+> **@tech-lead**: Thưa Giám Đốc @Lee, tôi đã chuẩn bị sẵn bộ quy tắc GitHub Rulesets tại `scripts/github/`. Đây là "bức tường lửa" để bảo vệ database của chúng ta. Tôi cũng đã hoàn thành việc sửa lỗi Package Structure (DT-003) để đảm bảo các Agent có thể vận hành trơn tru trên kiến trúc mới. Đội ngũ đã sẵn sàng để tiếp tục!
