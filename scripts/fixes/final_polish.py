@@ -1,3 +1,12 @@
+import sys
+import os
+from pathlib import Path
+
+# Thêm dự án gốc vào sys.path để có thể import core
+root = Path(__file__).parent.parent.parent.absolute()
+if str(root) not in sys.path:
+    sys.path.insert(0, str(root))
+
 import sqlite3
 from core.config import DB_PATH
 

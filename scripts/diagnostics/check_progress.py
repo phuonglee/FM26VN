@@ -1,3 +1,19 @@
+import sys
+import os
+from pathlib import Path
+
+# Thêm dự án gốc vào sys.path để có thể import core
+root = Path(__file__).parent.parent.parent.absolute()
+if str(root) not in sys.path:
+    sys.path.insert(0, str(root))
+
+# Fix lỗi hiển thị tiếng Việt trên Windows console
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except:
+        pass
+
 import sqlite3
 from core.config import DB_PATH
 
