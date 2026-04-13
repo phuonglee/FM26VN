@@ -1,0 +1,17 @@
+{
+  "fm-progress": {
+    "category": "development",
+    "description": "Báo cáo nhanh tiến độ dịch thuật FM26",
+    "tags": ["database", "stats", "fm26"]
+  },
+  "fm-translate": {
+    "category": "development",
+    "description": "Kích hoạt Agent dịch thuật cho dự án FM26",
+    "tags": ["translate", "ai-agent", "fm26"]
+  },
+  "dev-agent": {
+    "category": "development",
+    "description": "Developer Agent - Tự động sửa lỗi và quản lý code (commit/PR)",
+    "tags": ["dev", "git", "bug-fix"]
+  }
+}
