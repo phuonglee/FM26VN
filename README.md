@@ -29,6 +29,9 @@ python 2_run_agents.py --model deepseek
 
 # Chạy với GPT-mini
 python 2_run_agents.py --model gpt_mini
+
+# Chạy kèm SOT Engine (Khuyên dùng để tăng chất lượng)
+python 2_run_agents.py --model free_tier --use-sot
 ```
 
 Các model hỗ trợ: `default`, `deepseek`, `free_tier`, `gpt_mini`, `local`, `moonshot`.
