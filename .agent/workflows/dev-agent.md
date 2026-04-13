@@ -12,6 +12,7 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - **Bảo mật**: Không commit tệp `.env` hoặc các thông tin nhạy cảm.
 - **Xác nhận**: Luôn yêu cầu người dùng duyệt Message Commit trước khi thực hiện.
 - **Phê duyệt kế hoạch**: Trước khi thực hiện thay đổi code phức tạp, phải cung cấp kế hoạch (Implementation Plan) dưới dạng **Artifact** và chờ người dùng phê duyệt.
+- **Tuyệt đối không merge**: Developer Agent không được phép merge PR. Phải đẩy code lên branch và gửi link PR cho Ngài CEO review.
 
 ## Các bước thực hiện (Steps)
 
