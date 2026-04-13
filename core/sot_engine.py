@@ -26,7 +26,7 @@ class SOTEngine:
         Tra cứu tri thức và trả về chỉ dẫn dịch thuật rút gọn.
         Đây là "Layer 2" trong chiến lược tiết kiệm chi phí.
         """
-        results = self.db.query(query_text, n_results=3)
+        results = self.db.query(query_text, n_results=5)
         
         if not results or not results['documents'][0]:
             return "Không tìm thấy quy tắc cụ thể. Hãy tuân thủ rules.md chung."

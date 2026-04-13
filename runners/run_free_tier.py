@@ -9,6 +9,7 @@ from google import genai
 from dotenv import load_dotenv
 import sys
 import time
+from core.sot_engine import SOTEngine
 
 # Đảm bảo in được tiếng Việt trên console Windows
 if sys.stdout.encoding != 'utf-8':
@@ -24,6 +25,11 @@ if not API_KEY:
     exit(1)
 
 client = genai.Client(api_key=API_KEY)
+
+# Khởi tạo SOT Engine nếu được yêu cầu
+SOT_INSTANCE = SOTEngine() if os.getenv("USE_SOT") == "1" else None
+if SOT_INSTANCE:
+    print("[*] SOT Engine đã sẵn sàng trong Runner.")
 
 DB_NAME = DB_PATH
 
@@ -85,7 +91,17 @@ JSON input:
 
 async def translate_batch(batch, agent_name):
     input_json = {str(item[0]): item[1] for item in batch}
-    prompt = PROMPT_TEMPLATE + json.dumps(input_json, ensure_ascii=False)
+    
+    current_prompt = PROMPT_TEMPLATE
+    
+    # Tích hợp SOT Context nếu có
+    if SOT_INSTANCE:
+        sample_query = " ".join([item[1] for item in batch[:10]])
+        sot_context = SOT_INSTANCE.query_instruction(sample_query)
+        if sot_context:
+            current_prompt += f"\n[HƯỚNG DẪN BỔ SUNG TỪ DATABASE GỐC (SOT)]:\n{sot_context}\n\n"
+
+    prompt = current_prompt + json.dumps(input_json, ensure_ascii=False)
     
     for model_name in FALLBACK_MODELS:
         try:
