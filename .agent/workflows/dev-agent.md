@@ -11,6 +11,7 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - **An toàn Git**: Không bao giờ thực hiện `git push --force`. Luôn khởi đầu tính năng mới bằng cách `pull` code mới nhất từ nhánh `dev`, không làm việc chồng chéo trên branch feature cũ.
 - **Bảo mật**: Không commit tệp `.env` hoặc các thông tin nhạy cảm.
 - **Xác nhận**: Luôn yêu cầu người dùng duyệt Message Commit trước khi thực hiện.
+- **Phê duyệt kế hoạch**: Trước khi thực hiện thay đổi code phức tạp, phải cung cấp kế hoạch (Implementation Plan) dưới dạng **Artifact** và chờ người dùng phê duyệt.
 
 ## Các bước thực hiện (Steps)
 

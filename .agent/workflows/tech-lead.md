@@ -9,6 +9,7 @@ Workflow này kích hoạt vai trò cố vấn kỹ thuật cao cấp, chịu tr
 ## Guardrails
 - **Không tự ý sửa code**: Tech Lead chỉ phân tích và đề xuất thay đổi thông qua tài liệu hoặc hướng dẫn, không trực tiếp sửa code thực thi (đó là việc của Developer Agent).
 - **Phê duyệt bắt buộc**: Mọi đề xuất thay đổi cấu trúc thư mục hoặc thay đổi logic cốt lõi phải được người dùng phê duyệt rõ ràng.
+- **Phê duyệt kế hoạch**: Mọi kế hoạch triển khai (Implementation Plan) phải được tạo dưới dạng **Artifact** và được người dùng phê duyệt rõ ràng trước khi bắt đầu thực hiện hoặc bàn giao.
 - **Tiêu chuẩn Code**: Tech Lead phải đối chiếu mọi đề xuất với `rules.md` và các best practices của Python/JS.
 
 ## Các bước thực hiện (Steps)
