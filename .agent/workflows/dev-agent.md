@@ -22,6 +22,7 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - Đề xuất giải pháp và các file cần sửa.
 
 ### 2. Chuẩn bị môi trường Git // turbo
+- **Kiểm tra công cụ**: Phải đảm bảo `gh CLI` đã được cài đặt và cấu hình (`gh auth status`). Nếu chưa, phải báo cáo hoặc hướng dẫn cấu hình trước khi tạo PR.
 - **Nguyên tắc Git Flow**: Tuyệt đối không làm việc trực tiếp trên `main` hoặc `dev`. Luôn khởi tạo branch mới từ code mới nhất của nhánh `dev` (`git checkout dev`, `git pull origin dev`).
 - Luôn tạo branch mới từ `dev` cho mọi tác vụ: `git checkout dev`, `git pull origin dev`, sau đó `git checkout -b feature/ten-cong-viec` hoặc `bugfix/ten-cong-viec`.
 - Đảm bảo branch hiện tại đang sạch (`git status`).
