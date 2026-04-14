@@ -93,6 +93,7 @@ class LogicCheck:
             error_msgs.append("Sai thứ tự thẻ dữ liệu")
             
         # 3. Kiểm tra hậu tố đại từ tiếng Anh còn sót trong thẻ [%...-suffix]
+        # Theo rules.md: hậu tố đại từ BẮT BUỘC phải Việt hóa
         ENGLISH_PRONOUN_SUFFIXES = {
             '-i]', '-me]', '-my]',
             '-you]', '-your]',

@@ -9,8 +9,8 @@ root = Path(__file__).parent.parent.absolute()
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from core.config import DB_PATH
 from core.logic_check import LogicCheck
+from core.config import DB_PATH
 
 # Fix Unicode console
 if sys.stdout.encoding != 'utf-8':
