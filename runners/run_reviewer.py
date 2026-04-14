@@ -22,10 +22,15 @@ def run_reviewer():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
+    # Reset Rate để tái đánh giá (Tránh lặp vô hạn nếu status không đổi)
+    print("[*] Đang reset điểm số để chuẩn bị tái đánh giá...")
+    cursor.execute("UPDATE records SET rate = 0.0 WHERE status = 1")
+    conn.commit()
+
     # Đếm số lượng cần chấm điểm
     cursor.execute("SELECT COUNT(*) FROM records WHERE status = 1 AND rate = 0.0")
     total_to_review = cursor.fetchone()[0]
-    print(f"[*] Tìm thấy {total_to_review:,} bản ghi cần chấm điểm.")
+    print(f"[*] Đang tái đánh giá toàn bộ {total_to_review:,} bản ghi Status 1.")
 
     if total_to_review == 0:
         print("[+] Mọi bản ghi đã được chấm điểm. Kết thúc.")
