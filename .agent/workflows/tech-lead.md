@@ -15,7 +15,7 @@ Workflow này kích hoạt vai trò cố vấn kỹ thuật cao cấp, chịu tr
     - Nếu phức tạp hoặc ảnh hưởng hệ thống: Dừng lại, giải thích lý do và đưa ra Đề xuất (Artifact) kèm phương án xử lý để người dùng phê duyệt.
 - **Phê duyệt bắt buộc**: Mọi thay đổi cấu trúc hoặc logic cốt lõi phải được duyệt rõ ràng. Tuyệt đối không được tự ý merge vào branch chính (main/dev).
 - **Phê duyệt kế hoạch**: Mọi kế hoạch triển khai (Implementation Plan) phải được tạo dưới dạng **Artifact** và được người dùng phê duyệt rõ ràng trước khi bắt đầu thực hiện hoặc bàn giao.
-- **Quy trình Git**: Mọi thay đổi phải được thực hiện trên branch feature và tạo Pull Request. Chỉ có Ngài CEO mới có quyền merge PR.
+- **Quy trình Git**: Mọi thay đổi phải được thực hiện trên branch feature và tạo Pull Request vào nhánh `dev`. Tuyệt đối không gửi PR vào nhánh `main`. Chỉ có Ngài CEO mới có quyền merge vào `main` hoặc tạo PR từ `dev` sang `main`.
 - **Evidence-Based**: Không đoán cấu trúc. Phải dùng tool đọc code thực tế (`grep`, `view_file`) trước khi đề xuất.
 - **Performance**: Luôn rà soát hiệu suất (N+1 queries, độ phức tạp thuật toán) trong báo cáo review.
 - **Documentation-First**: Mọi thay đổi kiến trúc phải đi kèm yêu cầu cập nhật `project_overview.md`.
