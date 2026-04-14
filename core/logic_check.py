@@ -4,8 +4,7 @@ import unicodedata
 class LogicCheck:
     @staticmethod
     def validate_tags(eng, vi):
-        """Kiểm tra sự đồng bộ của các thẻ [%...] một cách linh hoạt."""
-        # Hàm trích xuất và chuẩn hóa thẻ: [%tag#1 - ghi chú] -> [%tag#1]
+        """Kiểm tra sự đồng bộ của các thẻ [%...] một cách linh hoạt, kiểm tra thứ tự và tự động điền thẻ thiếu."""
         def normalize_tag(tag):
             # Loại bỏ ngoặc và ký hiệu % ở cả hai đầu trước khi xử lý
             cleaned = tag.lower().strip('[]%')
@@ -15,30 +14,85 @@ class LogicCheck:
             match = re.search(r'[^#]+#\d+', cleaned)
             return match.group(0) if match else core
 
-        eng_tags = set(normalize_tag(tag) for tag in re.findall(r'\[%[^\]]+\]', eng))
-        vi_tags = set(normalize_tag(tag) for tag in re.findall(r'\[%[^\]]+\]', vi))
+        # Trích xuất danh sách thẻ (theo thứ tự)
+        eng_tags_raw = re.findall(r'\[%[^\]]+\]', eng)
+        vi_tags_raw = re.findall(r'\[%[^\]]+\]', vi)
         
-        missing = eng_tags - vi_tags
-        
-        # Phân loại các thẻ: Chỉ bắt buộc các thẻ dữ liệu cứng (Data Tags)
-        # Bỏ qua các thẻ nhân xưng/đại từ (Persona Tags) vì có thể dịch thoát ý thành chữ
-        # SI Typos: eprson, poerson, perso, erson, fm_pedia
         persona_prefix = {'person', 'male', 'female', 'you', 'your', 'eprson', 'poerson', 'perso', 'erson', 'fm_pedia'}
         
-        filtered_missing = []
-        for tag in missing:
-            if 'hidden' in tag: continue
-            # Nếu tag core (ví dụ 'male') nằm trong danh sách persona thì bỏ qua
-            tag_core = tag.split('#')[0]
-            if tag_core in persona_prefix: continue
+        # Chỉ lấy Data Tags (Bỏ qua Persona tags có thể đã dịch)
+        def filter_data_tags(tags_raw):
+            data_tags = []
+            for t in tags_raw:
+                if 'hidden' in t: continue
+                norm = normalize_tag(t)
+                core = norm.split('#')[0]
+                if core in persona_prefix: continue
+                data_tags.append((t, norm))
+            return data_tags
             
-            filtered_missing.append(tag)
+        eng_data = filter_data_tags(eng_tags_raw)
+        vi_data = filter_data_tags(vi_tags_raw)
         
-        if filtered_missing:
-            return False, f"Thiếu thẻ dữ liệu quan trọng: {', '.join(filtered_missing)}"
+        # 1. Tự động nội suy vị trí và điền thẻ thiếu
+        fixed_vi = vi
+        vi_norms = [norm for _, norm in vi_data]
+        missing_count = 0
+        error_msgs = []
         
-        # Kiểm tra hậu tố đại từ tiếng Anh còn sót trong thẻ [%...-suffix]
-        # Theo rules.md: hậu tố đại từ BẮT BUỘC phải Việt hóa
+        for i, (tag_raw, norm) in enumerate(eng_data):
+            if norm not in vi_norms:
+                missing_count += 1
+                # Auto-fix: Tìm vị trí chèn tối ưu dựa trên hàng xóm gần nhất (trước hoặc sau)
+                inserted = False
+                
+                # Thử tìm hàng xóm phía trước (Phải tìm từ i-1 ngược về 0)
+                for prev_idx in range(i - 1, -1, -1):
+                    prev_tag_raw, _ = eng_data[prev_idx]
+                    pos = fixed_vi.find(prev_tag_raw)
+                    if pos != -1:
+                        insert_pos = pos + len(prev_tag_raw)
+                        fixed_vi = fixed_vi[:insert_pos] + f" {tag_raw}" + fixed_vi[insert_pos:]
+                        inserted = True
+                        break
+                
+                # Nếu không tìm thấy hàng xóm phía trước, thử tìm hàng xóm phía sau (Phải tìm từ i+1 đến hết)
+                if not inserted:
+                    for next_idx in range(i + 1, len(eng_data)):
+                        next_tag_raw, _ = eng_data[next_idx]
+                        pos = fixed_vi.find(next_tag_raw)
+                        if pos != -1:
+                            # Chèn vào trước thẻ hàng xóm
+                            fixed_vi = fixed_vi[:pos] + f"{tag_raw} " + fixed_vi[pos:]
+                            inserted = True
+                            break
+                
+                # Cuối cùng nếu đơn độc, chèn vào cuối câu
+                if not inserted:
+                    fixed_vi = fixed_vi.strip() + f" {tag_raw}"
+                
+                # Cập nhật vi_norms để tránh chèn lặp trong vòng lặp này (mặc dù eng_data thường unique)
+                vi_norms.append(norm)
+        
+        if missing_count > 0:
+            error_msgs.append(f"Tự động bổ sung {missing_count} thẻ bị thiếu")
+            
+        # 2. Kiểm tra thứ tự thẻ Data sau khi đã fix
+        # Lấy lại danh sách tag từ fixed_vi để kiểm tra thứ tự
+        fixed_vi_tags_raw = re.findall(r'\[%[^\]]+\]', fixed_vi)
+        fixed_vi_data = filter_data_tags(fixed_vi_tags_raw)
+        fixed_vi_norms = [norm for _, norm in fixed_vi_data]
+        
+        eng_norms = [norm for _, norm in eng_data]
+        
+        # So sánh thứ tự các tag chung
+        common_eng = [n for n in eng_norms if n in fixed_vi_norms]
+        common_vi = [n for n in fixed_vi_norms if n in eng_norms]
+        
+        if common_eng != common_vi and eng_norms:
+            error_msgs.append("Sai thứ tự thẻ dữ liệu")
+            
+        # 3. Kiểm tra hậu tố đại từ tiếng Anh còn sót trong thẻ [%...-suffix]
         ENGLISH_PRONOUN_SUFFIXES = {
             '-i]', '-me]', '-my]',
             '-you]', '-your]',
@@ -46,14 +100,15 @@ class LogicCheck:
             '-she]', '-her]',
             '-they]', '-them]', '-their]',
         }
-        vi_tags_raw = re.findall(r'\[%[^\]]+\]', vi)
-        for tag in vi_tags_raw:
+        for tag in fixed_vi_tags_raw:
             tag_lower = tag.lower()
             for eng_suffix in ENGLISH_PRONOUN_SUFFIXES:
                 if tag_lower.endswith(eng_suffix):
-                    return False, f"Hậu tố đại từ tiếng Anh chưa Việt hóa: {tag}"
+                    error_msgs.append(f"Hậu tố đại từ tiếng Anh chưa Việt hóa: {tag}")
+                    break
             
-        return True, "Tags OK"
+        is_ok = len(error_msgs) == 0
+        return is_ok, "; ".join(error_msgs) if error_msgs else "Tags OK", fixed_vi
 
     @staticmethod
     def validate_pronouns(eng, vi):
@@ -100,6 +155,28 @@ class LogicCheck:
                     continue 
                 
                 found_errs.append(f"{msg}: '{word}'")
+                
+        # 3. Kiểm tra viết hoa chữ "Ngài" / "ngài" (Capitalization)
+        # Sử dụng chuỗi vi (nguyên bản, có phân biệt hoa/thường)
+        matches = re.finditer(r'\b([Nn]gài)\b', vi)
+        for match in matches:
+            word = match.group(1)
+            start_idx = match.start()
+            
+            is_start = False
+            prefix = vi[:start_idx].strip()
+            
+            if not prefix:
+                is_start = True
+            elif prefix[-1] in ['.', '!', '?'] or prefix.endswith('...'):
+                is_start = True
+            elif prefix[-1] in ['"', "'", '[', '{', '('] and len(prefix) >= 2 and prefix[-2] in ['.', '!', '?']:
+                is_start = True
+                
+            if is_start and word == 'ngài':
+                found_errs.append("Chữ 'ngài' đứng đầu hoặc sau ngắt câu phải viết hoa (Ngài)")
+            elif not is_start and word == 'Ngài':
+                found_errs.append("Chữ 'Ngài' giữa câu phải viết thường (ngài)")
         
         if found_errs:
             return False, "; ".join(found_errs)
@@ -141,24 +218,24 @@ class LogicCheck:
         feedbacks = []
         
         if not vi:
-            return 0.0, "Chưa dịch"
+            return 0.0, "Chưa dịch", vi
             
         # Kiểm tra Thẻ
-        tag_ok, tag_msg = cls.validate_tags(eng, vi)
+        tag_ok, tag_msg, fixed_vi = cls.validate_tags(eng, vi)
         if not tag_ok:
             score -= 0.5
             feedbacks.append(tag_msg)
             
         # Kiểm tra Xưng hô (Truyền thêm eng để check ngữ cảnh)
-        pro_ok, pro_msg = cls.validate_pronouns(eng, vi)
+        pro_ok, pro_msg = cls.validate_pronouns(eng, fixed_vi)
         if not pro_ok:
             score -= 0.2
             feedbacks.append(pro_msg)
             
         # Kiểm tra Cleanup
-        cln_ok, cln_msg = cls.validate_cleanup(vi)
+        cln_ok, cln_msg = cls.validate_cleanup(fixed_vi)
         if not cln_ok:
             score -= 0.1
             feedbacks.append(cln_msg)
             
-        return max(0.0, score), "; ".join(feedbacks) if feedbacks else "Perfect"
+        return max(0.0, score), "; ".join(feedbacks) if feedbacks else "Perfect", fixed_vi

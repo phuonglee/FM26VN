@@ -50,7 +50,7 @@ def run_reviewer():
             if vi is None:
                 vi = ""
             
-            rate, feedback = LogicCheck.evaluate(eng, vi)
+            rate, feedback, fixed_vi = LogicCheck.evaluate(eng, vi)
             
             # Quyết định trạng thái
             status = 1
@@ -63,9 +63,9 @@ def run_reviewer():
             elif rate < 0.9:
                 stats["low_rate"] += 1
 
-            updates.append((rate, status, feedback, row_id))
+            updates.append((rate, status, feedback, fixed_vi, row_id))
 
-        cursor.executemany("UPDATE records SET rate = ?, status = ?, review_feedback = ? WHERE id = ?", updates)
+        cursor.executemany("UPDATE records SET rate = ?, status = ?, review_feedback = ?, translated_text = ? WHERE id = ?", updates)
         conn.commit()
         
         reviewed_count += len(rows)

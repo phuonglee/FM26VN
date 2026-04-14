@@ -69,17 +69,20 @@ LUẬT BẮT BUỘC (Vi phạm sẽ làm hỏng file game):
    - Đám đông (They/Them/Their): "Họ / Của họ".
 
 2. QUY TẮC THẺ (Tag Logic):
-   - Thẻ Square [%...]: Giữ nguyên thẻ dữ liệu (team, cash, number, stadium...). Việt hóa hậu tố đại từ: [%person#1-you] -> [%person#1-Ngài], [%male#1-him] -> [%male#1-anh ấy]. Xóa khoảng trắng dư thừa trong thẻ: [% person] -> [%person].
+   - Thay thế ĐẠI TỪ: Các thẻ đại từ nhân xưng (ví dụ: [%person#1-you], [%male#1-him], [%female#1-her], [%person#1-his]...) PHẢI được thay thế hoàn toàn bằng đại từ tiếng Việt tương ứng (Ngài, anh ấy, cô ấy, của anh ấy...) để câu văn tự nhiên. KHÔNG dùng thẻ kèm hậu tố tiếng Việt.
+   - Giữ nguyên THẺ DỮ LIỆU & KỸ THUẬT: Giữ nguyên các thẻ dữ liệu (team, cash, number, stadium...). Các hậu tố kỹ thuật (-short, -surname, -first, -nickname, -lowercase, -long, -text, -nth, -hidden, -plural, -mine, -nocomp, -nosides, -hashtag) PHẢI giữ nguyên tiếng Anh.
+   - GIỮ NGUYÊN THẺ SOCIAL MEDIA: Các mẫu như #[%...], [%...]In, [%...]Out phải giữ nguyên 100%, không được dịch hay thay đổi cấu trúc.
    - Thẻ Curly {...}: Việt hóa: {an}/{a} -> {một}, {An}/{A} -> {Một}, {scoreline} -> {một tỷ số}, {ordinal} -> {thứ}.
-   - Sở hữu cách: [%team#1]{s} -> của [%team#1].
-   - Thẻ {the} -> {}.
+   - Sở hữu cách: [%team#1]{s} -> của [%team#1]. Thẻ {the} -> {}.
    - Số lượng dấu '[' và ']' hoặc '{' và '}' phải khớp tuyệt đối với câu gốc.
 
 3. DỌN DẸP KỸ THUẬT (Cleanup):
    - XÓA BỎ hoàn toàn các đoạn chú thích [COMMENT ...] hoặc [COMMENT: ...]. Không được dịch hay giữ lại thẻ này.
-   - Viết hoa đầu câu và sau dấu câu (. ! ?). Nếu thẻ nhân xưng đứng đầu câu, viết hoa hậu tố: [%person#1-Ngài].
+   - Viết hoa đầu câu và sau dấu câu (. ! ?). 
    - Khử lặp từ (ví dụ: "của nó của nó"), sửa lỗi dính chữ (tôiđã -> tôi đã).
    - Không dịch tên riêng, địa danh, hoặc các từ VIẾT HOA HOÀN TOÀN.
+   - QUY TẮC PERSONA: 100% Manager/You là "Ngài". Tuyệt đối không dùng "Bạn", "Anh", "Cậu", "Hắn", "Y".
+
 
 4. CHỈ TRẢ VỀ JSON ĐÚNG QUY CHUẨN. Tuyệt đối không dùng markdown block (```json) và không giải thích thêm.
 
