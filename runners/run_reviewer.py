@@ -9,8 +9,8 @@ root = Path(__file__).parent.parent.absolute()
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from core.config import DB_PATH
 from core.logic_check import LogicCheck
+from core.config import DB_PATH
 
 # Fix Unicode console
 if sys.stdout.encoding != 'utf-8':
@@ -22,10 +22,15 @@ def run_reviewer():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
+    # Reset Rate để tái đánh giá (Tránh lặp vô hạn nếu status không đổi)
+    print("[*] Đang reset điểm số để chuẩn bị tái đánh giá...")
+    cursor.execute("UPDATE records SET rate = 0.0 WHERE status = 1")
+    conn.commit()
+
     # Đếm số lượng cần chấm điểm
     cursor.execute("SELECT COUNT(*) FROM records WHERE status = 1 AND rate = 0.0")
     total_to_review = cursor.fetchone()[0]
-    print(f"[*] Tìm thấy {total_to_review:,} bản ghi cần chấm điểm.")
+    print(f"[*] Đang tái đánh giá toàn bộ {total_to_review:,} bản ghi Status 1.")
 
     if total_to_review == 0:
         print("[+] Mọi bản ghi đã được chấm điểm. Kết thúc.")
@@ -50,7 +55,7 @@ def run_reviewer():
             if vi is None:
                 vi = ""
             
-            rate, feedback = LogicCheck.evaluate(eng, vi)
+            rate, feedback, fixed_vi = LogicCheck.evaluate(eng, vi)
             
             # Quyết định trạng thái
             status = 1
@@ -63,9 +68,9 @@ def run_reviewer():
             elif rate < 0.9:
                 stats["low_rate"] += 1
 
-            updates.append((rate, status, feedback, row_id))
+            updates.append((rate, status, feedback, fixed_vi, row_id))
 
-        cursor.executemany("UPDATE records SET rate = ?, status = ?, review_feedback = ? WHERE id = ?", updates)
+        cursor.executemany("UPDATE records SET rate = ?, status = ?, review_feedback = ?, translated_text = ? WHERE id = ?", updates)
         conn.commit()
         
         reviewed_count += len(rows)
