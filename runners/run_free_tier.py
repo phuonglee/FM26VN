@@ -61,7 +61,7 @@ NGÔN NGỮ: Chuyên nghiệp, sang trọng nhưng gần gũi trong môi trườ
 
 LUẬT BẮT BUỘC (Vi phạm sẽ làm hỏng file game):
 1. QUY TẮC XƯNG HÔ (Diction & Pronouns):
-   - Người quản lý (Manager/You): Luôn dùng "Ngài". Tránh dùng "Bạn", "Anh".
+   - Người quản lý (Manager/You): Luôn dùng "Ngài". Tuyệt đối không dùng "Bạn", "Anh", "Cậu", "Hắn", "Y".
    - Người nói (I): Luôn dùng "Tôi".
    - Nam giới (He/Him/His): "Anh ấy" hoặc "Anh ta".
    - Nữ giới (She/Her/Hers): "Cô ấy" hoặc "Cô ta".

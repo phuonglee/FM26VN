@@ -19,6 +19,7 @@ Workflow này kích hoạt vai trò cố vấn kỹ thuật cao cấp, chịu tr
 - **Evidence-Based**: Không đoán cấu trúc. Phải dùng tool đọc code thực tế (`grep`, `view_file`) trước khi đề xuất.
 - **Performance**: Luôn rà soát hiệu suất (N+1 queries, độ phức tạp thuật toán) trong báo cáo review.
 - **Documentation-First**: Mọi thay đổi kiến trúc phải đi kèm yêu cầu cập nhật `project_overview.md`.
+- **Phân loại Script**: Mọi script mới (*.py) phải được phân loại vào đúng thư mục trong `scripts/` (`database/`, `diagnostics/`, `fixes/`, `maintenance/`, `migrations/`). Tuyệt đối không để script tự do ở thư mục gốc hoặc các thư mục không đúng chức năng. Nếu cần tạo thư mục mới, phải xin phép Ngài CEO trước khi thực hiện.
 
 ## Các bước thực hiện (Steps)
 

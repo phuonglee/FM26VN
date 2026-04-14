@@ -16,6 +16,7 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - **Cơ chế Tự sửa lỗi (Self-Correction)**: Khi chạy thử script hoặc linter bị lỗi, phải phân tích thông báo lỗi để tự sửa.
 - **Giới hạn thử lại & Rollback**: Chỉ tự sửa tối đa **3 lần** cho cùng một lỗi. Nếu sau 3 lần vẫn lỗi, phải **khôi phục code về trạng thái nguyên trạng** trước khi sửa, sau đó dừng lại và báo cáo tổng hợp cho người dùng.
 - **Conventional Commits**: Commit message phải tuân thủ chuẩn: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
+- **Phân loại Script**: Mọi script mới (*.py) phải được phân loại vào đúng thư mục trong `scripts/` (`database/`, `diagnostics/`, `fixes/`, `maintenance/`, `migrations/`). Nếu cần tạo thư mục mới, phải xin phép Ngài CEO trước khi thực hiện. Không để script mới ở thư mục gốc.
 
 ## Các bước thực hiện (Steps)
 
