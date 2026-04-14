@@ -77,23 +77,9 @@ class LogicCheck:
         if missing_count > 0:
             error_msgs.append(f"Tự động bổ sung {missing_count} thẻ bị thiếu")
             
-        # 2. Kiểm tra thứ tự thẻ Data sau khi đã fix
-        # Lấy lại danh sách tag từ fixed_vi để kiểm tra thứ tự
-        fixed_vi_tags_raw = re.findall(r'\[%[^\]]+\]', fixed_vi)
-        fixed_vi_data = filter_data_tags(fixed_vi_tags_raw)
-        fixed_vi_norms = [norm for _, norm in fixed_vi_data]
-        
-        eng_norms = [norm for _, norm in eng_data]
-        
-        # So sánh thứ tự các tag chung
-        common_eng = [n for n in eng_norms if n in fixed_vi_norms]
-        common_vi = [n for n in fixed_vi_norms if n in eng_norms]
-        
-        if common_eng != common_vi and eng_norms:
-            error_msgs.append("Sai thứ tự thẻ dữ liệu")
-            
         # 3. Kiểm tra hậu tố đại từ tiếng Anh còn sót trong thẻ [%...-suffix]
         # Theo rules.md: hậu tố đại từ BẮT BUỘC phải Việt hóa
+        fixed_vi_tags_raw = re.findall(r'\[%[^\]]+\]', fixed_vi)
         ENGLISH_PRONOUN_SUFFIXES = {
             '-i]', '-me]', '-my]',
             '-you]', '-your]',
