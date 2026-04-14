@@ -7,11 +7,12 @@ class LogicCheck:
         """Kiểm tra sự đồng bộ của các thẻ [%...] một cách linh hoạt."""
         # Hàm trích xuất và chuẩn hóa thẻ: [%tag#1 - ghi chú] -> [%tag#1]
         def normalize_tag(tag):
-            # Lấy phần chính trước dấu cách hoặc dấu gạch ngang đầu tiên bên trong thẻ
-            # VD: [%string#1 - Month] -> [%string#1]
-            core = re.split(r'[-\s#]', tag.lower().strip('[]%'))[0]
-            # Giữ lại số thứ tự nếu có: string#1
-            match = re.search(r'[^#]+#\d+', tag.lower())
+            # Loại bỏ ngoặc và ký hiệu % ở cả hai đầu trước khi xử lý
+            cleaned = tag.lower().strip('[]%')
+            # Lấy phần chính trước dấu cách hoặc dấu gạch ngang
+            core = re.split(r'[-\s#]', cleaned)[0]
+            # Giữ lại số thứ tự nếu có: male#2
+            match = re.search(r'[^#]+#\d+', cleaned)
             return match.group(0) if match else core
 
         eng_tags = set(normalize_tag(tag) for tag in re.findall(r'\[%[^\]]+\]', eng))
@@ -19,10 +20,38 @@ class LogicCheck:
         
         missing = eng_tags - vi_tags
         
-        # Bỏ qua các thẻ liên quan đến Manager/Persona đã được duyệt
-        persona_cores = {'person#1', 'male#1', 'female#1', 'you', 'your'}
-        filtered_missing = [tag for tag in missing if tag not in persona_cores and 'hidden' not in tag]
+        # Phân loại các thẻ: Chỉ bắt buộc các thẻ dữ liệu cứng (Data Tags)
+        # Bỏ qua các thẻ nhân xưng/đại từ (Persona Tags) vì có thể dịch thoát ý thành chữ
+        # SI Typos: eprson, poerson, perso, erson, fm_pedia
+        persona_prefix = {'person', 'male', 'female', 'you', 'your', 'eprson', 'poerson', 'perso', 'erson', 'fm_pedia'}
         
+        filtered_missing = []
+        for tag in missing:
+            if 'hidden' in tag: continue
+            # Nếu tag core (ví dụ 'male') nằm trong danh sách persona thì bỏ qua
+            tag_core = tag.split('#')[0]
+            if tag_core in persona_prefix: continue
+            
+            filtered_missing.append(tag)
+        
+        if filtered_missing:
+            return False, f"Thiếu thẻ dữ liệu quan trọng: {', '.join(filtered_missing)}"
+        
+        # Kiểm tra hậu tố đại từ tiếng Anh còn sót trong thẻ [%...-suffix]
+        # Theo rules.md: hậu tố đại từ BẮT BUỘC phải Việt hóa
+        ENGLISH_PRONOUN_SUFFIXES = {
+            '-i]', '-me]', '-my]',
+            '-you]', '-your]',
+            '-he]', '-him]', '-his]',
+            '-she]', '-her]',
+            '-they]', '-them]', '-their]',
+        }
+        vi_tags_raw = re.findall(r'\[%[^\]]+\]', vi)
+        for tag in vi_tags_raw:
+            tag_lower = tag.lower()
+            for eng_suffix in ENGLISH_PRONOUN_SUFFIXES:
+                if tag_lower.endswith(eng_suffix):
+                    return False, f"Hậu tố đại từ tiếng Anh chưa Việt hóa: {tag}"
             
         return True, "Tags OK"
 
@@ -37,7 +66,12 @@ class LogicCheck:
         exemptions = [
             "tiếng anh", "vương quốc anh", "nước anh", "anh quốc", "v.q anh",
             "trẻ em", "anh em", "chị em", "em gái", "em trai", "bạn bè", "em bé",
-            "mày mò", "đội tuyển anh", "đội tuyển vương quốc anh", "anh-scotland"
+            "mày mò", "đội tuyển anh", "đội tuyển vương quốc anh", "anh-scotland",
+            "anh hùng", "anh minh", "anh dũng", "anh tài", "anh hào", "anh tuấn",
+            "lông mày", "nhướng mày", "chau mày", "mày râu", "chân mày", "gờ chân mày",
+            "bạn đọc", "bạn hữu", "bạn đồng hành", "bạn đời", "đám bạn", "bạn thân", "người bạn", "tình bạn", "những người bạn", "kết bạn", "người bạn",
+            "anh/chị/em", "em ruột", "anh ruột", "chị ruột",
+            "cầu thủ", "ông chủ", "chú ý", "hắn ta", "nhu cầu", "chiều cao", "cậu bé", "cậu quý tử", "yêu cầu", "y tế", "y thuật", "chú trọng", "chú giải",
         ]
         for ex in exemptions:
             temp_vi = temp_vi.replace(ex, " EXEMPTED_WORD ")
@@ -46,7 +80,9 @@ class LogicCheck:
         rules = [
             (r'\b(em|mày|tao)\b', "Phát hiện xưng hô không phù hợp"),
             (r'\b(bạn)\b', "Phát hiện xưng hô 'bạn' (kiểm tra context?)"),
-            (r'\b(anh)\b(?!( ấy| ta))', "Dùng 'anh' đơn lẻ cho Manager (phải dùng 'Ngài')")
+            (r'\b(anh)\b(?!( ấy| ta))', "Dùng 'anh' đơn lẻ cho Manager (phải dùng 'Ngài')"),
+            (r'\b(cậu|hắn|y|chú)\b', "Phát hiện xưng hô lách luật"),
+            (r'^Của \[\%', "Lỗi cấu trúc 'Của [Đội bóng]' đứng đầu câu")
         ]
         
         found_errs = []
