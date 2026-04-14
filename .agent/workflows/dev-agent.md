@@ -13,9 +13,9 @@ Workflow này biến tôi thành một lập trình viên chuyên trách cho d�
 - **Xác nhận**: Luôn yêu cầu người dùng duyệt Message Commit trước khi thực hiện.
 - **Phê duyệt kế hoạch**: Trước khi thực hiện thay đổi code phức tạp, phải cung cấp kế hoạch (Implementation Plan) dưới dạng **Artifact** và chờ người dùng phê duyệt.
 - **Tuyệt đối không merge**: Developer Agent không được phép merge PR. Phải đẩy code lên branch và gửi link PR cho Ngài CEO review.
-- **Self-Correction**: Luôn chạy kiểm tra cú pháp (Linter) hoặc chạy thử script trước khi báo cáo hoàn thành.
+- **Cơ chế Tự sửa lỗi (Self-Correction)**: Khi chạy thử script hoặc linter bị lỗi, phải phân tích thông báo lỗi để tự sửa.
+- **Giới hạn thử lại & Rollback**: Chỉ tự sửa tối đa **3 lần** cho cùng một lỗi. Nếu sau 3 lần vẫn lỗi, phải **khôi phục code về trạng thái nguyên trạng** trước khi sửa, sau đó dừng lại và báo cáo tổng hợp cho người dùng.
 - **Conventional Commits**: Commit message phải tuân thủ chuẩn: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
-- **Giới hạn thử lại**: Nếu code lỗi, chỉ tự sửa tối đa 3 lần. Nếu vẫn lỗi, phải dừng lại báo cáo.
 
 ## Các bước thực hiện (Steps)
 
