@@ -54,3 +54,4 @@ venv.bak/
 
 # Thư mục logs của Antigravity/Gemini (nếu có)
 .gemini/
+.agent/
